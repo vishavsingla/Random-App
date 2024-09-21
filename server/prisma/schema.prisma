@@ -1,0 +1,87 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id          Int                 @id @default(autoincrement())
+  name        String
+  email       String              @unique
+  createdAt   DateTime            @default(now())
+  preferences TravelPreferences[]
+  itineraries Itinerary[]
+}
+
+model TravelPreferences {
+  id                      Int        @id @default(autoincrement())
+  travel_type             String
+  budget                  Float
+  local_budget            Float
+  trip_duration           Int
+  number_of_travelers     Int
+  traveling_with_children Boolean
+  other_requirements      String?
+  residence_country       String?
+  currency                String?
+  user                    User       @relation(fields: [userId], references: [id])
+  userId                  Int
+  createdAt               DateTime   @default(now())
+  itinerary               Itinerary?
+
+  interests         Interest[]
+  preferredWeather  Weather[]
+}
+
+model Interest {
+  id                Int               @id @default(autoincrement())
+  name              String
+  preferencesId     Int
+  travelPreferences TravelPreferences @relation(fields: [preferencesId], references: [id])
+}
+
+model Weather {
+  id                Int               @id @default(autoincrement())
+  condition         String
+  preferencesId     Int
+  travelPreferences TravelPreferences @relation(fields: [preferencesId], references: [id])
+}
+
+model Itinerary {
+  id              Int               @id @default(autoincrement())
+  details         String
+  recommendations Recommendation[]
+  locations       Location[]
+  travelPrefsId   Int               @unique
+  travelPrefs     TravelPreferences @relation(fields: [travelPrefsId], references: [id])
+  createdAt       DateTime          @default(now())
+  userId          Int
+  user            User              @relation(fields: [userId], references: [id])
+}
+
+model Location {
+  id          Int       @id @default(autoincrement())
+  name        String
+  itineraryId Int
+  itinerary   Itinerary @relation(fields: [itineraryId], references: [id])
+}
+
+model Recommendation {
+  id                    Int       @id @default(autoincrement())
+  itineraryId           Int
+  itinerary             Itinerary @relation(fields: [itineraryId], references: [id])
+  locationName          String
+  description           String
+  recommendedActivities String
+  accommodation         String
+  diningOptions         String
+  transportation        String
+  safetyTips            String
+  budgetBreakdown       String
+  tips                  String
+  createdAt             DateTime  @default(now())
+}
