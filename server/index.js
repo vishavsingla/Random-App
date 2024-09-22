@@ -17,13 +17,22 @@ const PORT = process.env.PORT || 8000;
 //   optionSuccessStatus: 200,
 // };
 
+const allowedOrigins = ['https://random-app-gamma.vercel.app', 'http://localhost:3000'];
+
 const corsOptions = {
-  origin: 'https://random-app-gamma.vercel.app',
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
   optionSuccessStatus: 200
 };
+
 
 app.use(bodyParser.json());
 app.use(cors(corsOptions));
