@@ -1,4 +1,5 @@
 // File: src/components/SubmitItinerary.tsx
+'use client'
 import { useState } from 'react';
 import { submitItinerary } from '@/utils/api';
 

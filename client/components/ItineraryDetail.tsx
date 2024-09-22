@@ -11,6 +11,7 @@ interface ItineraryDetailProps {
 
 const ItineraryDetail = ({ token, itineraryId }: ItineraryDetailProps) => {
   const [itinerary, setItinerary] = useState<any>(null);
+  const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,7 +20,7 @@ const ItineraryDetail = ({ token, itineraryId }: ItineraryDetailProps) => {
       try {
         const data = await fetchItineraryById(itineraryId, token);
         setItinerary(data);
-      } catch (error:any) {
+      } catch (error: any) {
         setError(error.message);
       } finally {
         setLoading(false);
@@ -31,7 +32,7 @@ const ItineraryDetail = ({ token, itineraryId }: ItineraryDetailProps) => {
   if (loading) return <p>Loading itinerary...</p>;
   if (error) return <p>Error: {error}</p>;
 
-  return <ItineraryDisplay itinerary={itinerary} />;
+  return <ItineraryDisplay itinerary={itinerary} recommendations={recommendations}/>;
 };
 
 export default ItineraryDetail;
