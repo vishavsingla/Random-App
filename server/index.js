@@ -196,7 +196,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// Route to generate an itinerary and recommendations
+
 app.post('/generate_itinerary', verifyToken, async (req, res) => {
   try {
     const loggedInUser = req.user;
@@ -213,6 +213,14 @@ app.post('/generate_itinerary', verifyToken, async (req, res) => {
       user = await getOrCreateGuestUser();
     }
 
+    // Parse budget and trip_duration
+    const parsedBudget = parseFloat(preferences.budget) || 0; // Fallback to 0
+    const parsedTripDuration = parseFloat(preferences.trip_duration) || 1; // Prevent division by zero
+    const local_budget = parsedTripDuration > 0 ? parsedBudget / parsedTripDuration : 0; // Calculate local_budget
+
+    // Parse number_of_travelers as Int
+    const numberOfTravelers = parseInt(preferences.number_of_travelers, 10) || 1; // Fallback to 1
+
     const prompt = generatePrompt(preferences);
     const result = await model.generateContent(prompt);
     const responseText = await result.response.text();
@@ -224,10 +232,10 @@ app.post('/generate_itinerary', verifyToken, async (req, res) => {
         travelPrefs: {
           create: {
             travel_type: preferences.travel_type,
-            budget: preferences.budget,
-            local_budget: preferences.local_budget,
-            trip_duration: preferences.trip_duration,
-            number_of_travelers: preferences.number_of_travelers,
+            budget: parsedBudget, // Pass as Float
+            trip_duration: parsedTripDuration, // Pass as Float
+            local_budget: local_budget, // Pass as Float
+            number_of_travelers: numberOfTravelers, // Pass as Int
             traveling_with_children: preferences.traveling_with_children,
             other_requirements: preferences.other_requirements || '',
             residence_country: preferences.residence_country || '',
@@ -256,7 +264,6 @@ app.post('/generate_itinerary', verifyToken, async (req, res) => {
         }
       }
     });
-    
 
     await storeRecommendations(itinerary.id, responseText);
 
@@ -270,6 +277,8 @@ app.post('/generate_itinerary', verifyToken, async (req, res) => {
     res.status(500).json({ error: 'An error occurred while generating the itinerary. Please try again.' });
   }
 });
+
+
 
 // Route to fetch itineraries for the logged-in user
 app.get('/itineraries', verifyToken, async (req, res) => {

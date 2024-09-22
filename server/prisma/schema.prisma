@@ -26,16 +26,19 @@ model TravelPreferences {
   number_of_travelers     Int
   traveling_with_children Boolean
   other_requirements      String?
-  residence_country       String?
-  currency                String?
+  residence_country       String?    // User's residence country
+  destination_country     String?    // Add this for the destination country
+  currency                String?    // User's currency
+  destination_currency    String?    // Add this for the destination currency
   user                    User       @relation(fields: [userId], references: [id])
   userId                  Int
   createdAt               DateTime   @default(now())
   itinerary               Itinerary?
 
-  interests         Interest[]
-  preferredWeather  Weather[]
+  interests               Interest[]
+  preferredWeather        Weather[]
 }
+
 
 model Interest {
   id                Int               @id @default(autoincrement())
