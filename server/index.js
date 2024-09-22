@@ -11,19 +11,19 @@ const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 8000;
 
-const corsOptions = {
-  origin: ["http://localhost:3000"],
-  credentials: true,
-  optionSuccessStatus: 200,
-};
-
 // const corsOptions = {
-//   origin: 'https://anticorrupto-frontend.vercel.app',
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//   allowedHeaders: ['Content-Type', 'Authorization'],
+//   origin: ["http://localhost:3000"],
 //   credentials: true,
-//   optionSuccessStatus: 200
+//   optionSuccessStatus: 200,
 // };
+
+const corsOptions = {
+  origin: 'https://random-app-gamma.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  optionSuccessStatus: 200
+};
 
 app.use(bodyParser.json());
 app.use(cors(corsOptions));

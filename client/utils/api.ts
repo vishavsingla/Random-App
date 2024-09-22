@@ -1,5 +1,5 @@
 // File: src/utils/api.ts
-const BASE_URL = 'http://localhost:8000';
+const BASE_URL = 'https://random-app-8nrz.onrender.com';
 
 // Helper function to handle API requests
 const handleApiResponse = async (response: Response) => {

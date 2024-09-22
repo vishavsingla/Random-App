@@ -89,7 +89,7 @@ const Wanderlust: React.FC = () => {
 
     try {
       const response = await axios.post<{ recommendations: Recommendation[] }>(
-        'http://localhost:8000/generate_itinerary',
+        'https://random-app-8nrz.onrender.com/generate_itinerary',
         formData
       );
       setRecommendations(response.data.recommendations);
